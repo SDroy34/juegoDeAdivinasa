@@ -9,9 +9,7 @@ namespace juegoDeAdivinasa
 {
     public class Condiciones
     {
-        public int numerosUsuarios { get; set; }
-        public int numeroRandom { get; set; }
-        public bool conversionExitosa { get; set; }
+
         public void CondicionMasBajoAlto(int numeroUsuario, int numeroRandom)
         {
             if (numeroUsuario > numeroRandom)
