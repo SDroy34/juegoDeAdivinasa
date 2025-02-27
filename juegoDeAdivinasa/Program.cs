@@ -1,6 +1,7 @@
-﻿using juegoDeAdivinasa;
+﻿using juegoDeAdivinasa.Services;
 using System;
 using System.Numerics;
+using System.Runtime;
 
 //2.Juego de adivinanzas(número secreto)
 //Descripción: Un pequeño juego en el que los jugadores
@@ -23,78 +24,93 @@ namespace juegodeadivinasa
     {
         static void Main(string[] args)
         {
-            //Se crea un numero aleatorio
-            Random numRando = new Random();
-            int numUsuario;
-            int intentos = 0, opc;
-            Condiciones condiciones = new Condiciones();
-            //Se muestra la lista de opciones
-            Console.WriteLine("Este es un juego de adivinar el numero");
-            Console.WriteLine("Elije un nivel\n" +
-                "1. Facil\n" +
-                "2. Medio\n" +
-                "3. Dificil");
-            var opcString = Console.ReadLine();
-            bool converExit2 = int.TryParse(opcString, out opc);
-            condiciones.CondicionNumeroUsuario(converExit2);
-            if (converExit2 == true)
+            bool salir = false;
+            do
             {
+
+                #region Variables
+                //Se crea un numero aleatorio
+                bool converExitosa;
+                Random numRando = new Random();
+                int numUsuario;
+                int intentos = 0, opc;
+                Condiciones condiciones = new Condiciones();
+                #endregion
+                //Se muestra la lista de opciones
+
+                Mensajes.MensajeIncio();
+                var opcString = Console.ReadLine();
+                converExitosa = int.TryParse(opcString, out opc);
+                if (converExitosa == false)
+                    opc = condiciones.ValidarNumUsuario();
                 switch (opc)
                 {
                     case 1:
                         int numeroFacil = numRando.Next(10);
-                        Console.WriteLine("Pon un numero del 1 al 10");
+                        Mensajes.PonUnNumeroCase1();
                         do
                         {
+                            Mensajes.IngresNum();
                             var numString = Console.ReadLine();
-                            bool converExitosa = int.TryParse(numString, out numUsuario);
-                            condiciones.CondicionNumeroUsuario(converExitosa);
+                            converExitosa = int.TryParse(numString, out numUsuario);
+                            if (converExitosa == false)
+                                condiciones.ValidarNumUsuario();
                             if (converExitosa == true)
                             {
                                 condiciones.CondicionMasBajoAlto(numUsuario, numeroFacil);
                             }
                             intentos++;
                         } while (numeroFacil != numUsuario);
-                        Console.WriteLine($"Felicidades encontrate el numeor aleatorio {numeroFacil} en el intento {intentos}");
+                        Mensajes.Felicitaciones(numeroFacil, intentos);
                         break;
                     case 2:
                         int numeroMedio = numRando.Next(100);
-                        Console.WriteLine("Pon un numero del 1 al 100");
+                        Mensajes.PonUnNumeroCase2();
                         do
                         {
+                            Mensajes.IngresNum();
                             var numString = Console.ReadLine();
-                            bool converExitosa = int.TryParse(numString, out numUsuario);
-                            condiciones.CondicionNumeroUsuario(converExitosa);
+                            converExitosa = int.TryParse(numString, out numUsuario);
+                            if (converExitosa == false)
+                                opc = condiciones.ValidarNumUsuario();
                             if (converExitosa == true)
                             {
-                            condiciones.CondicionMasBajoAlto(numUsuario, numeroMedio);
+                                condiciones.CondicionMasBajoAlto(numUsuario, numeroMedio);
                             }
                             intentos++;
                         } while (numeroMedio != numUsuario);
-                        Console.WriteLine($"Felicidades encontrate el numeor aleatorio {numeroMedio} en el intento {intentos}");
+                        Mensajes.Felicitaciones(numeroMedio, intentos);
                         break;
                     case 3:
                         int numeroDificil = numRando.Next(1000);
-                        Console.WriteLine("Pon un numero del 1 al 1000");
+                        Mensajes.PonUnNumeroCase3();
                         do
                         {
+                            Mensajes.IngresNum();
                             var numString = Console.ReadLine();
-                            bool converExitosa = int.TryParse(numString, out numUsuario);
-                            condiciones.CondicionNumeroUsuario(converExitosa);
+                            converExitosa = int.TryParse(numString, out numUsuario);
+                            if (converExitosa == false)
+                                numUsuario = condiciones.ValidarNumUsuario();
                             if (converExitosa == true)
                             {
                                 condiciones.CondicionMasBajoAlto(numUsuario, numeroDificil);
                             }
                             intentos++;
                         } while (numeroDificil != numUsuario);
-                        Console.WriteLine($"Felicidades encontrate el numeor aleatorio {numeroDificil} en el intento {intentos}");
+                        Mensajes.Felicitaciones(numeroDificil, intentos);
                         break;
-                    default:
-                        Console.WriteLine("Elije una opcion valida");
+                    case 4:
+                        salir = true;
+                        break;
+                    case >= 0:
+                    case <= 5:
+                        Console.WriteLine("Fuera de rango");
                         break;
                 }
 
-            }
+            } while (!salir);
+            Mensajes.Despeida();
         }
     }
 }
+
